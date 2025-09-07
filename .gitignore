@@ -15,15 +15,5 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
-
-###> IDEs ###
-.idea/
-.vscode/
-###< IDEs ###
-
-###> SO e arquivos locais ###
-.DS_Store
-Thumbs.db
-###< SO e arquivos locais ###
 .env
 .env.dev

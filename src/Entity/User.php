@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\SoftDeleteable;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -32,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ["ROLE_USER"];
 
     /**
      * @var string The hashed password
@@ -51,6 +53,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    /**
+     * @var Collection<int, UserStore>
+     */
+    #[ORM\OneToMany(targetEntity: UserStore::class, mappedBy: 'user')]
+    private Collection $userStores;
+
+    public function __construct() {
+        $this->userStores = new ArrayCollection();
+    }
 
     public function getId(): ?int {
         return $this->id;
@@ -159,6 +171,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function setIsVerified(bool $isVerified): static {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserStore>
+     */
+    public function getUserStores(): Collection {
+        return $this->userStores;
+    }
+
+    public function addUserStore(UserStore $userStore): static {
+        if (!$this->userStores->contains($userStore)) {
+            $this->userStores->add($userStore);
+            $userStore->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserStore(UserStore $userStore): static {
+        if ($this->userStores->removeElement($userStore)) {
+            // set the owning side to null (unless already changed)
+            if ($userStore->getUser() === $this) {
+                $userStore->setUser(null);
+            }
+        }
 
         return $this;
     }

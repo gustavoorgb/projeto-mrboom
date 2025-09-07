@@ -57,13 +57,12 @@
 
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
-										{{ form_row(registrationForm.plainPassword, {
-                                            'label': false,
-                                            'attr': {'class': 'form-control form-control-user', 'placeholder': 'Senha'}
-                                        }) }}
+										{{ form_widget(registrationForm.password.first, {'attr': {'class': 'form-control form-control-user', 'placeholder': 'Senha'}}) }}
+										{{ form_errors(registrationForm.password.first) }}
 									</div>
-									<div class="col-sm-6">{# Adicione um segundo campo para a repetição da senha se necessário #}
-										{# Você pode usar a lógica de RepeatedType na sua classe de formulário #}
+									<div class="col-sm-6">
+										{{ form_widget(registrationForm.password.second, {'attr': {'class': 'form-control form-control-user', 'placeholder': 'Confirmar Senha'}}) }}
+										{{ form_errors(registrationForm.password.second) }}
 									</div>
 								</div>
 

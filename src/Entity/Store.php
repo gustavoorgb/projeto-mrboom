@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\SoftDeleteable;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: StoreRepository::class)]
@@ -17,6 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 
 class Store {
+    use TimestampableEntity;
     use SoftDeleteableEntity;
 
     #[ORM\Id]
@@ -34,14 +36,14 @@ class Store {
     private ?\DateTime $dt_foundation = null;
 
     /**
-     * @var Collection<int, Address>
+     * @var Collection<int, UserStore>
      */
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'store_id')]
-    private Collection $addresses;
+    #[ORM\OneToMany(targetEntity: UserStore::class, mappedBy: 'store')]
+    private Collection $userStores;
 
     public function __construct()
     {
-        $this->addresses = new ArrayCollection();
+        $this->userStores = new ArrayCollection();
     }
 
     public function getId(): ?int {
@@ -79,29 +81,29 @@ class Store {
     }
 
     /**
-     * @return Collection<int, Address>
+     * @return Collection<int, UserStore>
      */
-    public function getAddresses(): Collection
+    public function getUserStores(): Collection
     {
-        return $this->addresses;
+        return $this->userStores;
     }
 
-    public function addAddress(Address $address): static
+    public function addUserStore(UserStore $userStore): static
     {
-        if (!$this->addresses->contains($address)) {
-            $this->addresses->add($address);
-            $address->setStoreId($this);
+        if (!$this->userStores->contains($userStore)) {
+            $this->userStores->add($userStore);
+            $userStore->setStore($this);
         }
 
         return $this;
     }
 
-    public function removeAddress(Address $address): static
+    public function removeUserStore(UserStore $userStore): static
     {
-        if ($this->addresses->removeElement($address)) {
+        if ($this->userStores->removeElement($userStore)) {
             // set the owning side to null (unless already changed)
-            if ($address->getStoreId() === $this) {
-                $address->setStoreId(null);
+            if ($userStore->getStore() === $this) {
+                $userStore->setStore(null);
             }
         }
 

@@ -289,12 +289,6 @@ button::-moz-focus-inner,
   border-style: none;
 }
 
-input[type="radio"],
-input[type="checkbox"] {
-  box-sizing: border-box;
-  padding: 0;
-}
-
 textarea {
   overflow: auto;
   resize: vertical;
@@ -2060,6 +2054,35 @@ textarea.form-control {
   border-radius: 0.35rem;
 }
 
+/* assets/styles/custom.css */
+
+.form-check-input {
+    width: 1em !important;
+    height: 1em !important;
+    margin-top: 0.25em !important;
+    vertical-align: top !important;
+    background-color: #fff !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+    border: 1px solid rgba(0, 0, 0, 0.25) !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+.form-check-input[type="checkbox"] {
+    border-radius: 0.25em !important;
+}
+
+.form-check-input:checked[type="checkbox"] {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-label {
+    margin-bottom: 0 !important;
+}
+
 .form-row > .col > .valid-tooltip,
 .form-row > [class*="col-"] > .valid-tooltip {
   left: 5px;
@@ -3343,15 +3366,6 @@ input[type="button"].btn-block {
 .btn-group-toggle > .btn,
 .btn-group-toggle > .btn-group > .btn {
   margin-bottom: 0;
-}
-
-.btn-group-toggle > .btn input[type="radio"],
-.btn-group-toggle > .btn input[type="checkbox"],
-.btn-group-toggle > .btn-group > .btn input[type="radio"],
-.btn-group-toggle > .btn-group > .btn input[type="checkbox"] {
-  position: absolute;
-  clip: rect(0, 0, 0, 0);
-  pointer-events: none;
 }
 
 .input-group {
