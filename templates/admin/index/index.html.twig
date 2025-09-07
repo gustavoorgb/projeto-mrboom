@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Página Inicial!
+{% endblock %}
+
+{% block breadcrumbs %}
+	{% include 'components/_breadcrumb.html.twig' with {
+        breadcrumbs: [
+            { label: 'Dashboard' },
+        ]
+    } %}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Olá, Bootstrap!</h1>
+		<p>Se você está vendo isso, suas mudanças funcionaram.</p>
+		<button class="btn btn-primary">Botão de teste</button>
+	</div>
+{% endblock %}
