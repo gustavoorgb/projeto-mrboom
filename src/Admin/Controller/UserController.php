@@ -3,6 +3,7 @@
 namespace App\Admin\Controller;
 
 use App\Admin\Form\UserType;
+use App\Admin\Security\Voter\UserVoter;
 use App\Admin\Service\UserService;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -19,6 +20,8 @@ final class UserController extends AbstractController {
 
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response {
+        $this->denyAccessUnlessGranted(UserVoter::VIEW, new User());
+
         return $this->render('admin/user/index.html.twig', [
             'users' => $userRepository->findAll(),
         ]);
@@ -27,6 +30,7 @@ final class UserController extends AbstractController {
     #[Route('/cadastro', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response {
         $user = new User();
+        $this->denyAccessUnlessGranted(UserVoter::CREATE, $user);
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -46,6 +50,7 @@ final class UserController extends AbstractController {
 
     #[Route('/{id}/editar', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user): Response {
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -66,6 +71,7 @@ final class UserController extends AbstractController {
     #[Route('/perfil', name: 'app_user_profile', methods: ['GET', 'POST'])]
     public function profile(Request $request): Response {
         $user = $this->getUser();
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -85,6 +91,8 @@ final class UserController extends AbstractController {
 
     #[Route('/{id}/delete', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user): Response {
+        $this->denyAccessUnlessGranted(UserVoter::DELETE, $user);
+
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $this->userService->deleteUser($user, $this->getUser());
             $this->addFlash('success', 'Usuário excluído com sucesso.');

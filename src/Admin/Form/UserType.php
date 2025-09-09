@@ -2,6 +2,7 @@
 
 namespace App\Admin\Form;
 
+use App\Admin\Security\RoleProvider;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,6 +14,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
 class UserType extends AbstractType {
+
+    private RoleProvider $roleProvider;
+
+    public function __construct(RoleProvider $roleProvider) {
+        $this->roleProvider = $roleProvider;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->add('name', TextType::class, [
@@ -55,10 +63,7 @@ class UserType extends AbstractType {
                 ],
             ])
             ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Usuário' => 'ROLE_USER',
-                    'Administrador' => 'ROLE_ADMIN',
-                ],
+                'choices' => $this->roleProvider->getRoleChoices(),
                 'expanded' => true,
                 'multiple' => true,
                 'label' => 'Papéis de Acesso',

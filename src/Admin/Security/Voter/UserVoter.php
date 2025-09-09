@@ -33,17 +33,18 @@ class UserVoter extends Voter {
             $vote?->addReason('O usuário não esta logado.');
             return false;
         }
-        //--> falta implementar as roles
+
+        $userRoles = $currentUser->getRoles();
+
         switch ($attribute) {
-            case self::EDIT:
             case self::VIEW:
             case self::CREATE:
-                // Permite se o usuário for ROLE_USER_MANAGER
-                return $this->accessDecisionManager->decide($token, ['ROLE_USER_MANAGER']);
+            case self::EDIT:
+                return count(array_intersect($userRoles, ['ROLE_USER_MANAGER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) > 0;
 
             case self::DELETE:
-                // Permite se o usuário for ROLE_USER_MANAGER e não for o próprio usuário logado
-                return $this->accessDecisionManager->decide($token, ['ROLE_USER_MANAGER']) && $currentUser->getId() !== $subject->getId();
+                return count(array_intersect($userRoles, ['ROLE_USER_MANAGER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) > 0
+                    and $currentUser->getId() !== $subject->getId();
         }
         return false;
     }
